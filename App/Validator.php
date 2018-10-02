@@ -3,7 +3,6 @@
 namespace App;
 
 use Respect\Validation\Rules;
-use \ReCaptcha\Recaptcha;
 
 class Validator
 {
@@ -43,7 +42,7 @@ class Validator
         $this->emailCopyValidator = new Rules\AllOf(
             new Rules\BoolType()
         );
-        $this->recaptchaValidator = new ReCaptcha($recaptchaPrivateKey);
+        $this->recaptchaValidator = new \ReCaptcha\ReCaptcha($recaptchaPrivateKey);
     }
 
     public function validate($value, $valueType)
