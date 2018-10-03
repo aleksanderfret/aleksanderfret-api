@@ -35,25 +35,23 @@ if ($validator->validate($json, 'json')) {
             $mail->setFrom($senderAddress, $data['name']['value'] . ' from website');
             $mail->addReplyTo($data['email']['value'], $data['name']['value']);
             $mail->addAddress($recipientAddress, $recipientName);
-            $mail->addAddress($senderAddress, 'website');
             if ($data['emailcopy']['value']) {
                 $mail->addCC($data['email']['value']);
             }
             $mail->Subject = $data['subject']['value'];
 
-            $messageBody = 'Wiadomość od '
+            $messageBody = "Wiadomość od "
                 . $data['name']['value']
-                . '\r\n\r\nWyrażono zgodę na użycie danych osobowych'
-                . ' w celu udzielenia odpowiedzi na zgłoszone zapytanie.'
-                . '\r\n\r\n'.$data['message']['value'];
+                . "\r\n\r\nWyrażono zgodę na użycie danych osobowych"
+                . " w celu udzielenia odpowiedzi na zgłoszone zapytanie."
+                . "\r\n\r\n"
+                . $data['message']['value'];
 
             $mail->Body = $messageBody;
 
             $mail->send();
             $statusCode = 200;
         } catch (Exception $e) {
-            print ($mail->ErrorInfo);
-            print ('skąd ten błąd');
             $statusCode = 500;
         }
     }
