@@ -18,15 +18,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $json = file_get_contents('php://input');
 
 if ($validator->validate($json, 'json')) {
-    file_put_contents($logName, $validator->validate($json, 'json'));
     $isContactDataValid = true;
     $errors = [];
     $data = json_decode(file_get_contents('php://input'), true);
     $dataKeys = array_keys($data);
 
     foreach ($dataKeys as $key) {
-        $errors[$key] = $validator->validate($data[$key]['value'], $key);
-        if ($errors[$key] !== '') {
+        $errors[$key] = !$validator->validate($data[$key]['value'], $key);
+        if ($errors[$key]) {
             $isContactDataValid = false;
         }
     }

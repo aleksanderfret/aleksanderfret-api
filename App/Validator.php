@@ -36,22 +36,23 @@ class Validator
         return !(!$value || !$this->formValidator($value, $valueType));
     }
 
+    private function sanitizeValue($value) {
+        return trim(filter_var($value, FILTER_SANITIZE_STRING));
+    }
+
     private function formValidator($value, $valueType)
     {
-
-        $sanitizedValue = trim(filter_var($value, FILTER_SANITIZE_STRING));
-
         switch ($valueType) {
             case 'name':
-                return $this->nameValidator->validate($sanitizedValue);
+                return $this->nameValidator->validate($this->sanitizeValue($value));
             case 'email':
-                return $this->emailValidator->validate($sanitizedValue);
+                return $this->emailValidator->validate($this->sanitizeValue($value));
             case 'message':
-                return $this->messageValidator->validate($sanitizedValue);
+                return $this->messageValidator->validate($this->sanitizeValue($value));
             case 'rodo':
-                return $this->rodoValidator->validate($sanitizedValue);
+                return $this->rodoValidator->validate($this->sanitizeValue($value));
             case 'json':
-                return $this->jsonValidator->validate($sanitizedValue);
+                return $this->jsonValidator->validate($value);
         }
     }
 
