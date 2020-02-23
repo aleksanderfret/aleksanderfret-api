@@ -8,74 +8,48 @@ class Validator
 {
     private $nameValidator;
     private $emailValidator;
-    private $subjectValidator;
     private $messageValidator;
     private $jsonValidator;
     private $rodoValidator;
-    private $emailCopyValidator;
-    private $recaptchaValidator;
 
     public function __construct($recaptchaPrivateKey)
     {
         $this->nameValidator = new Rules\AllOf(
-            new Rules\Regex('|^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ -\']+$|'),
             new Rules\Length(3, 60)
         );
         $this->emailValidator = new Rules\AllOf(
             new Rules\Email()
         );
-        $this->subjectValidator = new Rules\AllOf(
-            new Rules\Regex('|^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ0-9,.)-:(!? \']+$|'),
-            new Rules\Length(5, 500)
-        );
         $this->messageValidator = new Rules\AllOf(
-            new Rules\Regex('|^[a-zA-ZąćęłńóśżźĄĆĘŁŃÓŚŻŹ0-9,.)-:(!? \']+$|'),
             new Rules\Length(5, 2000)
         );
         $this->jsonValidator = new Rules\AllOf(
             new Rules\Json()
         );
         $this->rodoValidator = new Rules\AllOf(
-            new Rules\BoolType(),
-            new Rules\TrueVal()
+            new Rules\Equals('accepted')
         );
-        $this->emailCopyValidator = new Rules\AllOf(
-            new Rules\BoolType()
-        );
-        $this->recaptchaValidator = new \ReCaptcha\ReCaptcha($recaptchaPrivateKey);
     }
 
     public function validate($value, $valueType)
     {
-        $error = '';
-        if (!$value && $valueType !== 'emailcopy') {
-            $error = 'required';
-        } elseif (!$this->patternValidator($value, $valueType)) {
-            $error = 'pattern';
-        }
-        return $error;
+        return !(!$value || !$this->formValidator($value, $valueType));
     }
 
-    private function patternValidator($value, $valueType)
+    private function formValidator($value, $valueType)
     {
-        if (gettype($value) !== 'boolean') {
-            $value = trim(filter_var($value, FILTER_SANITIZE_STRING));
-        }
+
+        $sanitizedValue = trim(filter_var($value, FILTER_SANITIZE_STRING));
+
         switch ($valueType) {
             case 'name':
-                return $this->nameValidator->validate($value);
+                return $this->nameValidator->validate($sanitizedValue);
             case 'email':
-                return $this->emailValidator->validate($value);
-            case 'subject':
-                return $this->subjectValidator->validate($value);
+                return $this->emailValidator->validate($sanitizedValue);
             case 'message':
-                return $this->messageValidator->validate($value);
+                return $this->messageValidator->validate($sanitizedValue);
             case 'rodo':
-                return $this->rodoValidator->validate($value);
-            case 'emailcopy':
-                return $this->emailCopyValidator->validate($value);
-            case 'captcha':
-                return $this->captchaValidator($value);
+                return $this->rodoValidator->validate($sanitizedValue);
         }
     }
 

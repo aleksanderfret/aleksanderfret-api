@@ -7,13 +7,14 @@ require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR .
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Validator;
-
+file_put_contents('logafret1.txt','dupa');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     return;
 }
     $statusCode = 200;
     $validator = new Validator($privateKey);
-$json = file_get_contents('php://input');
+    $json = file_get_contents('php://input');
+    file_put_contents('logafret.txt','dupa');
 if ($validator->validate($json, 'json')) {
     $isContactDataValid = true;
     $errors = [];
@@ -35,10 +36,7 @@ if ($validator->validate($json, 'json')) {
             $mail->setFrom($senderAddress, $data['name']['value'] . ' from website');
             $mail->addReplyTo($data['email']['value'], $data['name']['value']);
             $mail->addAddress($recipientAddress, $recipientName);
-            if ($data['emailcopy']['value']) {
-                $mail->addCC($data['email']['value']);
-            }
-            $mail->Subject = $data['subject']['value'];
+            $mail->Subject = 'Wiadomość ze strony www.aleksander.fret.com.pl';
 
             $messageBody = "Wiadomość od "
                 . $data['name']['value']
