@@ -7,6 +7,7 @@ require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR .
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Validator;
+use App\Logger;
 
 $logName = time() . '-log.txt';
 
@@ -53,10 +54,13 @@ if ($validator->validate($json, 'json')) {
             $mail->send();
             $statusCode = 200;
         } catch (Exception $e) {
+            $logger = new Logger();
+            $logger->saveLog($e, ['JSON'=> $json, 'DATA' => $data, 'ERRORS' => $errors]);
             $statusCode = 500;
         }
     }
 } else {
+    $logger->saveLog('Invalid JSON', ['JSON'=> $json, 'DATA' => $data, 'ERRORS' => $errors]);
     print ($json);
     $statusCode = 400;
 }

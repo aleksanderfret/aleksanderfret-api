@@ -2,7 +2,7 @@
 API ;-) for my online CV
 
 ## Version
-1.0.0. - 2018.10.03
+0.1.1. - 2020.02.23
 
 ## Technologies
 PHP
