@@ -50,6 +50,8 @@ class Validator
                 return $this->messageValidator->validate($sanitizedValue);
             case 'rodo':
                 return $this->rodoValidator->validate($sanitizedValue);
+            case 'json':
+                return $this->jsonValidator->validate($sanitizedValue);
         }
     }
 

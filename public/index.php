@@ -7,19 +7,23 @@ require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR .
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Validator;
-file_put_contents('logafret1.txt','dupa');
+
+$logName = time() . '-log.txt';
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     return;
 }
     $statusCode = 200;
     $validator = new Validator($privateKey);
     $json = file_get_contents('php://input');
-    file_put_contents('logafret.txt','dupa');
+
 if ($validator->validate($json, 'json')) {
+    file_put_contents($logName, $validator->validate($json, 'json'));
     $isContactDataValid = true;
     $errors = [];
     $data = json_decode(file_get_contents('php://input'), true);
     $dataKeys = array_keys($data);
+
     foreach ($dataKeys as $key) {
         $errors[$key] = $validator->validate($data[$key]['value'], $key);
         if ($errors[$key] !== '') {
