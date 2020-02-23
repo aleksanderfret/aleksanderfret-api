@@ -12,7 +12,7 @@ class Validator
     private $jsonValidator;
     private $rodoValidator;
 
-    public function __construct($recaptchaPrivateKey)
+    public function __construct()
     {
         $this->nameValidator = new Rules\AllOf(
             new Rules\Length(3, 60)

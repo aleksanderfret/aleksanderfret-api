@@ -2,21 +2,20 @@
 header('Content-Type: application/json');
 
 require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'Config' . DIRECTORY_SEPARATOR . 'config.php';
-require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+require dirname(__DIR__) . DIRECTORY_SEPARATOR. 'Vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Validator;
 use App\Logger;
 
-$logName = time() . '-log.txt';
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     return;
 }
-    $statusCode = 200;
-    $validator = new Validator($privateKey);
-    $json = file_get_contents('php://input');
+
+$statusCode = 200;
+$validator = new Validator($privateKey);
+$json = file_get_contents('php://input');
 
 if ($validator->validate($json, 'json')) {
     $isContactDataValid = true;
@@ -50,7 +49,7 @@ if ($validator->validate($json, 'json')) {
                 . $data['message']['value'];
 
             $mail->Body = $messageBody;
-
+            
             $mail->send();
             $statusCode = 200;
         } catch (Exception $e) {
